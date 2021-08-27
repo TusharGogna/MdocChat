@@ -1,38 +1,30 @@
 package mdoc.com.mdocchat;
 
-import android.arch.persistence.room.Room;
-import android.databinding.DataBindingUtil;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import mdoc.com.mdocchat.adapters.MessageAdapter;
 import mdoc.com.mdocchat.database.ChatData;
 import mdoc.com.mdocchat.database.ChatDatabase;
 import mdoc.com.mdocchat.databinding.ActivityMainBinding;
-import mdoc.com.mdocchat.engine.MyApplication;
 import mdoc.com.mdocchat.models.MainModel;
 import mdoc.com.mdocchat.pojo.Message;
 import mdoc.com.mdocchat.presenter.MainPresenter;
@@ -43,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements MainPresenter {
 
     private ActivityMainBinding mBinding;
     private List<Message> mMessages = new ArrayList<Message>();
-    private RecyclerView.Adapter mAdapter;
+    private MessageAdapter mAdapter;
     private boolean mTyping = false;
-    private Handler mTypingHandler = new Handler();
+    private final Handler mTypingHandler = new Handler();
     private String mUsername;
     private Socket mSocket;
     private Boolean isConnected = true;
@@ -85,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter {
         }
     }
 
-    private Runnable onTypingTimeout = new Runnable() {
+    private final Runnable onTypingTimeout = new Runnable() {
         @Override
         public void run() {
             if (!mTyping) return;
@@ -121,8 +113,14 @@ public class MainActivity extends AppCompatActivity implements MainPresenter {
         });
         scrollToBottom();
     }
-
+    private String userNameTyping="";
     private void addTyping(String username) {
+        if(username.equals(userNameTyping)){
+            removeTyping(username);
+            userNameTyping="";
+            return;
+        }
+        userNameTyping = username;
         mMessages.add(new Message.Builder(Message.TYPE_ACTION)
                 .username(username).build());
         mAdapter.notifyItemInserted(mMessages.size() - 1);

@@ -16,7 +16,7 @@ public class MyApplication extends Application {
 
     {
         try {
-            mSocket = IO.socket("http://54.210.217.166:30004");
+            mSocket = IO.socket("https://socketio-chat-h9jt.herokuapp.com/");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

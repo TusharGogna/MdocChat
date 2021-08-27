@@ -2,8 +2,6 @@ package mdoc.com.mdocchat.models;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
